@@ -64,8 +64,17 @@ export const AccountInfoForm = ({
     const [isEditing, setIsEditing] = useState(false)
 
     const handleFormSave = (user: User) => {
-        onUpdateUser(user)
-        onSave(user)
+        const trimmedUser: User = {
+            ...user,
+            address: {
+                ...user.address,
+                addressLine1: user.address.addressLine1?.trim() || null,
+                addressLine2: user.address.addressLine2?.trim() || null,
+                city: user.address.city?.trim() || null,
+            },
+        }
+        onUpdateUser(trimmedUser)
+        onSave(trimmedUser)
     }
 
     const showAddressLine2 =
@@ -79,9 +88,8 @@ export const AccountInfoForm = ({
             user.address.zip?.trim()
         )
 
-    const normalizeText = (value?: string | null) => {
-        const trimmed = value?.trim() ?? ''
-        return trimmed.length ? trimmed : null
+    const normalizeText = (value?: string | null): string | null => {
+        return value?.length ? value : null
     }
 
     return (
